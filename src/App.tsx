@@ -1,27 +1,34 @@
 import { useState } from 'react';
-import './App.css'
-import Balance from './components/Balance';
-import TransactionForm from './components/TransactionForm';
-import TransactionList from './components/TransactionList';
-import type { Transaction } from './types';
+import './App.css';
 
 function App() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [input, setInput] = useState('');
 
-  const handleAddTransaction = (transaction: Omit<Transaction, 'id'>) => {
-    const amount = transaction.type === 'expense' ? -transaction.amount : transaction.amount;
-    const newTransaction = { ...transaction, id: Math.floor(Math.random() * 100000000), amount };
-    setTransactions([...transactions, newTransaction]);
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+    
+    console.log('Submitted:', input);
+    setInput('');
   };
 
   return (
-    <>
-      <h1>Money Accounting System</h1>
-      <Balance transactions={transactions} />
-      <TransactionForm onAddTransaction={handleAddTransaction} />
-      <TransactionList transactions={transactions} />
-    </>
-  )
+    <div className="app">
+      <h1>今天买了什么?</h1>
+      <form onSubmit={handleSubmit} className="form">
+        <input
+          type="text"
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder="输入你买的东西..."
+          className="input"
+        />
+        <button type="submit" className="submit-button">
+          提交
+        </button>
+      </form>
+    </div>
+  );
 }
 
-export default App
+export default App;
